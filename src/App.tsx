@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import TopBanner from './Blah'; //importing Blah file so we can use its functions on this file
+import MovieList from './Movies';
+import PicturePage from './PicturePage';
+import Podcasts from './Podcast';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/picture" element={<PicturePage />} />
+            <Route path="/podcast" element={<Podcasts />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <TopBanner />
+                  <br></br>
+                  <Link to="/picture">Home</Link>
+                  <br></br>
+                  <Link to="/podcast">Podcast</Link>
+                  <br></br>
+                  <MovieList />
+                </>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </>
   );
 }
 
