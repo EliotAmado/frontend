@@ -1,59 +1,53 @@
 import { useState } from 'react';
-import data from './MovieDataSample.json';
-import data2 from './MovieData.json';
-
-const mds = data.MovieDataSample;
-const md = data2.MovieData;
-
+import { Movies } from './Types/Movies';
 function MovieList() {
-  const [ListOMovies, setListOMovies] = useState(md); //the state it will be in is in the batman returns state we put down below
-  const addMovie = () => {
-    setListOMovies([
-      ...md,
-      {
-        Category: 'Action/Adventure',
-        Title: 'Batman Returns',
-        Year: 1992,
-        Director: 'Tim Burton',
-        Rating: 'PG-13',
-      },
-    ]);
+  const [MovieData, setMovieData] = useState<Movies[]>([]);
+
+  const fetchMovies = async () => {
+    const rsp = await fetch('https://localhost:4000/Movie');
+    const temp = await rsp.json();
+    setMovieData(temp);
   };
+
+  fetchMovies();
+
+  // Filter and sort the movies array
+  const editedMovies = MovieData.filter((movie) => movie.edited !== null);
+  editedMovies.sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <>
-      <div>
-        <h3>Joel Hiltons collection</h3>
+      <div className="row">
+        <h4>Movie List</h4>
       </div>
-
-      <div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Year</th>
-              <th>Director</th>
-              <th>Rating</th>
-              <th>Category</th>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Director</th>
+            <th>Rating</th>
+            <th>Edited</th>
+            <th>Lent To</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {MovieData.map((f) => (
+            <tr key={f.movieId}>
+              <td>{f.category}</td>
+              <td>{f.title}</td>
+              <td>{f.year}</td>
+              <td>{f.director}</td>
+              <td>{f.rating}</td>
+              <td>{f.edited}</td>
+              <td>{f.lentTo}</td>
+              <td>{f.notes}</td>
             </tr>
-          </thead>
-          <tbody>
-            {md.map((m) => (
-              <tr>
-                <td>{m.Title}</td>
-                <td>{m.Year}</td>
-                <td>{m.Director}</td>
-                <td>{m.Rating}</td>
-                <td>{m.Category}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* <button className="btn btn-primary" onClick={addMovie}>
-        Add Movie
-      </button> */}
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }
